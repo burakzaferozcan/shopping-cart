@@ -1,5 +1,6 @@
 import React from "react";
 import Header from "../../components/common/Header";
+import withRouter from "../../withRouter";
 
 function Cart() {
   return (
@@ -9,4 +10,4 @@ function Cart() {
   );
 }
 
-export default Cart;
+export default withRouter(Cart);

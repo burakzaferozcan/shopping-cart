@@ -1,5 +1,6 @@
 import React from "react";
 import Header from "../../components/common/Header";
+import withRouter from "../../withRouter";
 
 function Home() {
   return (
@@ -9,4 +10,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default withRouter(Home);
