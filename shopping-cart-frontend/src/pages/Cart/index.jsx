@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "../../components/common/Header";
 
-function Home() {
+function Cart() {
   return (
     <>
       <Header />
@@ -9,4 +9,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Cart;
