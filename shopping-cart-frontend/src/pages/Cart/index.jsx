@@ -1,11 +1,22 @@
 import React, { useEffect } from "react";
 import Header from "../../components/common/Header";
 import withRouter from "../../withRouter";
-import { Button, Col, Container, Row, Table } from "react-bootstrap";
+import {
+  Badge,
+  Button,
+  Card,
+  Col,
+  Container,
+  Row,
+  Table,
+} from "react-bootstrap";
 import cartWrapper from "../../cartWrapper";
+import { Link } from "react-router-dom";
 
 function Cart({ cart }) {
-  const { items, totalUniqueItems, updateItemQuantity, removeItem } = cart;
+  const KDV = 20;
+  const { items, totalUniqueItems, updateItemQuantity, removeItem, cartTotal } =
+    cart;
 
   return (
     <>
@@ -81,6 +92,39 @@ function Cart({ cart }) {
           </Col>
         </Row>
       </Container>
+      {totalUniqueItems !== 0 && (
+        <Container>
+          <Row className="mt-5">
+            <Col md={6}>
+              <Card>
+                <Card.Body>
+                  <Card.Text>
+                    Ara Toplam :{" "}
+                    <Badge className="text-white p-2 ml-1 bg-success">
+                      {cartTotal}
+                    </Badge>
+                  </Card.Text>
+                  <Card.Text>
+                    KDV :{" "}
+                    <Badge className="text-white p-2 ml-1 bg-danger">
+                      {KDV}%
+                    </Badge>
+                  </Card.Text>
+                  <Card.Text>
+                    Toplam Fiyat :{" "}
+                    <Badge className="text-white p-2 ml-1 bg-primary">
+                      {cartTotal + cartTotal * (KDV / 100)}
+                    </Badge>
+                  </Card.Text>
+                </Card.Body>
+                <Button variant="success" as={Link} to="/payment">
+                  Ödeme Yap
+                </Button>
+              </Card>
+            </Col>
+          </Row>
+        </Container>
+      )}
     </>
   );
 }
