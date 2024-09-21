@@ -1,3 +1,4 @@
+import axios from "axios";
 class RestClient {
   static getRequest = (url = "", config = {}) => {
     return axios
