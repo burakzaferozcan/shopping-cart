@@ -13,7 +13,6 @@ class RestClient {
         return err.response;
       });
   };
-
   static postRequest = (url = "", data = {}, config = {}) => {
     return axios
       .post(url, data, {
