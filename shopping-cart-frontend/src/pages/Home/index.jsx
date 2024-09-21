@@ -10,6 +10,7 @@ import cartWrapper from "../../cartWrapper.jsx";
 function Home({ cart }) {
   const [isLoading, setIsLoading] = useState(true);
   const [products, setProducts] = useState([]);
+
   const getProducts = () => {
     RestClient.getRequest(AppUrl.home)
       .then((res) => {
@@ -26,21 +27,23 @@ function Home({ cart }) {
         setIsLoading(false);
       });
   };
-  const addQuantitiy = (id, value) => {
-    let newProducts = products.map((item, index) => {
+
+  const addQuantity = (id, value) => {
+    let newProducts = products.map((item) => {
       if (item.prd_id === id) {
-        return { ...item, addQuantitiy: parseInt(value) };
+        return { ...item, addQuantity: parseInt(value) || 0 }; // NaN olmaması için fallback
       }
       return item;
     });
     setProducts(newProducts);
   };
+
   useEffect(() => {
     getProducts();
   }, []);
 
   const addCart = (id) => {
-    let newProducts = products.map((item, index) => {
+    let newProducts = products.map((item) => {
       if (item.prd_id === id) {
         cart.addItem(
           {
@@ -48,9 +51,9 @@ function Home({ cart }) {
             name: item.name,
             price: item.price,
           },
-          parseInt(item.addQuantitiy)
+          parseInt(item.addQuantity) || 1 // NaN kontrolü
         );
-        delete item.addQuantitiy;
+        delete item.addQuantity;
       }
       return item;
     });
@@ -67,6 +70,7 @@ function Home({ cart }) {
       </div>
     );
   }
+
   return (
     <>
       <Header />
@@ -75,26 +79,24 @@ function Home({ cart }) {
           Ürün Listesi
         </h3>
         <Row className="mt-5">
-          {products ? (
+          {products.length > 0 ? (
             products.map((product, index) => {
               return (
                 <Col md={4} className="mt-5" key={index}>
                   <Card>
                     <Card.Body>
                       <Card.Title>{product.name}</Card.Title>
-                      <Card.Text>Fiyat : {product.price}</Card.Text>
+                      <Card.Text>Fiyat: {product.price}</Card.Text>
                       <input
                         type="number"
-                        value={product.addQuantitiy ? product.addQuantitiy : ""}
+                        value={product.addQuantity ? product.addQuantity : ""}
                         onChange={(e) =>
-                          addQuantitiy(product.prd_id, e.target.value)
+                          addQuantity(product.prd_id, e.target.value)
                         }
                       />
                       <Button
                         variant="success"
-                        onClick={() => {
-                          addCart(product.prd_id);
-                        }}
+                        onClick={() => addCart(product.prd_id)}
                       >
                         Sepete Ekle
                       </Button>
