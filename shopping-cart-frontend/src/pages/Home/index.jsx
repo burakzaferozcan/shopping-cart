@@ -5,8 +5,9 @@ import { Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
 import RestClient from "../../RestAPI/RestClient";
 import Notification from "../../RestAPI/Notification";
 import AppUrl from "../../RestAPI/AppUrl";
+import cartWrapper from "../../cartWrapper.jsx";
 
-function Home() {
+function Home({ cart }) {
   const [isLoading, setIsLoading] = useState(true);
   const [products, setProducts] = useState([]);
   const getProducts = () => {
@@ -21,9 +22,7 @@ function Home() {
       })
       .catch((err) => {
         console.log(err);
-        Notification.error({
-          text: "Ürünler yüklenirken bir hata oluştu!",
-        });
+        Notification.error("Ürünler yüklenirken bir hata oluştu!");
         setIsLoading(false);
       });
   };
@@ -57,7 +56,19 @@ function Home() {
                     <Card.Body>
                       <Card.Title>{product.name}</Card.Title>
                       <Card.Text>Fiyat : {product.price}</Card.Text>
-                      <Button variant="success">Sepete Ekle</Button>
+                      <Button
+                        variant="success"
+                        onClick={() => {
+                          cart.addItem({
+                            id: product.prd_id,
+                            name: product.name,
+                            price: product.price,
+                          });
+                          Notification.success("Ürün sepete eklendi!");
+                        }}
+                      >
+                        Sepete Ekle
+                      </Button>
                     </Card.Body>
                   </Card>
                 </Col>
@@ -74,4 +85,4 @@ function Home() {
   );
 }
 
-export default withRouter(Home);
+export default withRouter(cartWrapper(Home));
