@@ -26,9 +26,36 @@ function Home({ cart }) {
         setIsLoading(false);
       });
   };
+  const addQuantitiy = (id, value) => {
+    let newProducts = products.map((item, index) => {
+      if (item.prd_id === id) {
+        return { ...item, addQuantitiy: parseInt(value) };
+      }
+      return item;
+    });
+    setProducts(newProducts);
+  };
   useEffect(() => {
     getProducts();
   }, []);
+
+  const addCart = (id) => {
+    let newProducts = products.map((item, index) => {
+      if (item.prd_id === id) {
+        cart.addItem(
+          {
+            id: item.prd_id,
+            name: item.name,
+            price: item.price,
+          },
+          parseInt(item.addQuantitiy)
+        );
+        delete item.addQuantitiy;
+      }
+      return item;
+    });
+    setProducts(newProducts);
+  };
 
   if (isLoading) {
     return (
@@ -56,15 +83,17 @@ function Home({ cart }) {
                     <Card.Body>
                       <Card.Title>{product.name}</Card.Title>
                       <Card.Text>Fiyat : {product.price}</Card.Text>
+                      <input
+                        type="number"
+                        value={product.addQuantitiy ? product.addQuantitiy : ""}
+                        onChange={(e) =>
+                          addQuantitiy(product.prd_id, e.target.value)
+                        }
+                      />
                       <Button
                         variant="success"
                         onClick={() => {
-                          cart.addItem({
-                            id: product.prd_id,
-                            name: product.name,
-                            price: product.price,
-                          });
-                          Notification.success("Ürün sepete eklendi!");
+                          addCart(product.prd_id);
                         }}
                       >
                         Sepete Ekle
